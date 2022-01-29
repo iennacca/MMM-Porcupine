@@ -34,6 +34,8 @@ Module.register("MMM-Porcupine", {
     var debug = (this.config.debug) ? this.config.debug : false
     if (debug == true) log = _log
 
+    log('Starting');
+
     this.sendSocketNotification('INIT', this.config)
 
     // bypass the ASSISSTANT_READY startup work flow so Porcupine listens as soon as it's started
@@ -41,7 +43,7 @@ Module.register("MMM-Porcupine", {
   },
 
   notificationReceived: function(notification, payload, sender) {
-    log("Notification received: " + notification);
+    log("notificationReceived: " + notification + "|" + payload + "|" + sender);
     switch (notification) {
       case "ASSISTANT_READY":
       case "A2D_AMK2_READY":
@@ -58,6 +60,7 @@ Module.register("MMM-Porcupine", {
   // When node_helper sends the DETECTED socket notification and it is recieved
   // here
   socketNotificationReceived: function(notification, payload) {
+    log("socketNotificationReceived: " + notification + "|" + payload);
     switch (notification) {
       case "DETECTED":
         // Send ASSISTANT_ACTIVATE notification to MM Google Assistant MK2

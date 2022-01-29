@@ -27,7 +27,7 @@ module.exports = NodeHelper.create({
   },
 
   socketNotificationReceived: function(notification, payload) {
-    log(notification);
+    log(notification + "|" + payload);
     switch(notification) {
       case "INIT":
         // set the internal config to the payload received in socket notification
@@ -81,14 +81,14 @@ module.exports = NodeHelper.create({
 
   // Tell Porcupine to start listening
   activate: function() {
-    log("Started")
+    log("Starting")
     this.porcupine.start()
     this.running = true
   },
 
   // Tell Porcupine to stop listening
   deactivate: function() {
-    log(" Stopped")
+    log(" Stopping")
     this.porcupine.stop()
     this.running = false
   },
