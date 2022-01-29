@@ -8,7 +8,7 @@ var NodeHelper = require("node_helper")
 // Logging function to log MMM-Porcupine output, in this case it is binding the
 // output of the current script to the console with the [PORCUPINE] context
 var _log = function() {
-    var context = "[PORCUPINE]"
+    var context = "[NODE-PORCUPINE]"
     return Function.prototype.bind.call(console.log, console, context)
 }()
 
@@ -21,13 +21,13 @@ var log = function() {
 module.exports = NodeHelper.create({
   // Start function
   start: function () {
-    console.log("[PORCUPINE] Starting...")
     this.config = {}
     this.running = false
     this.porcupine = null
   },
 
   socketNotificationReceived: function(notification, payload) {
+    log(notification);
     switch(notification) {
       case "INIT":
         // set the internal config to the payload received in socket notification
@@ -56,8 +56,8 @@ module.exports = NodeHelper.create({
     var hotword = this.config.hotword
 
     // Inform the user of the hotword currently in use + sensitivity
-    console.log('USING HOTWORD:', hotword)
-    console.log('SENSITIVITY:', this.config.sensitivity)
+    log('HOTWORD:', hotword)
+    log('SENSITIVITY:', this.config.sensitivity)
 
     // Add the hotword
     const data = require(`./hotwords/${hotword}`);
@@ -76,18 +76,19 @@ module.exports = NodeHelper.create({
         console.log('DETECTED:', hotword);
     });
 
-    log("Initialized...")
-
+    log("Initialized");
   },
 
   // Tell Porcupine to start listening
   activate: function() {
+    log("Started")
     this.porcupine.start()
     this.running = true
   },
 
   // Tell Porcupine to stop listening
   deactivate: function() {
+    log(" Stopped")
     this.porcupine.stop()
     this.running = false
   },

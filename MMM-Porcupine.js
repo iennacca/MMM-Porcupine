@@ -1,5 +1,17 @@
 // Module : MMM-Porcupine
 
+// Logging function to log MMM-Porcupine output, in this case it is binding the
+// output of the current script to the console with the [PORCUPINE] context
+var _log = function() {
+  var context = "[MMM-PORCUPINE]"
+  return Function.prototype.bind.call(console.log, console, context)
+}()
+
+// Logging
+var log = function() {
+//do nothing
+}
+
 Module.register("MMM-Porcupine", {
   defaults: {
     debug: false,
@@ -18,10 +30,18 @@ Module.register("MMM-Porcupine", {
 
   start: function() {
     this.config = this.configAssignment({}, this.defaults, this.config)
+    // if config has debug=true then start in debug mode, else dont
+    var debug = (this.config.debug) ? this.config.debug : false
+    if (debug == true) log = _log
+
     this.sendSocketNotification('INIT', this.config)
+
+    // bypass the ASSISSTANT_READY startup work flow so Porcupine listens as soon as it's started
+    this.sendSocketNotification('START', this.config)
   },
 
   notificationReceived: function(notification, payload, sender) {
+    log("Notification received: " + notification);
     switch (notification) {
       case "ASSISTANT_READY":
       case "A2D_AMK2_READY":
